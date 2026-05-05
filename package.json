@@ -1,0 +1,54 @@
+{
+  "name": "dt-tools",
+  "version": "0.1.2",
+  "description": "CLI for validating DTCG JSON design tokens and converting them to CSS.",
+  "license": "MIT",
+  "homepage": "https://example.com/dt-tools",
+  "bugs": {
+    "url": "https://example.com/dt-tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://example.com/dt-tools.git"
+  },
+  "type": "module",
+  "bin": {
+    "dt-tools": "dist-cli/index.cjs"
+  },
+  "files": [
+    "dist-cli",
+    "readme.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:app && npm run build:cli",
+    "build:app": "vite build",
+    "build:cli": "tsup",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "cli": "tsx src/cli/index.ts",
+    "prepack": "npm run build:cli"
+  },
+  "dependencies": {
+    "@terrazzo/cli": "^2.0.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "commander": "^14.0.1",
+    "dispersa": "^1.4.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  }
+}
