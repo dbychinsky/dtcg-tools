@@ -1,4 +1,4 @@
-# Design token tools (dt-tools)
+# Design token tools (dtsg-tools)
 
 CLI for validating DTCG JSON design tokens and converting them to CSS.
 
@@ -11,14 +11,14 @@ Node.js >=18
 Run without install:
 
 ```bash
-npx dt-tools validate tokens.json --engine ajv
+npx dtsg-tools validate tokens.json --engine ajv
 ```
 
 Or install globally:
 
 ```bash
-npm install -g dt-tools
-dt-tools validate tokens.json --engine ajv
+npm install -g dtsg-tools
+dtsg-tools validate tokens.json --engine ajv
 ```
 
 ## Validate
@@ -26,20 +26,20 @@ dt-tools validate tokens.json --engine ajv
 Validate one file (default engine):
 
 ```bash
-npx dt-tools validate tokens.json
+npx dtsg-tools validate tokens.json
 ```
 
 Validate multiple files:
 
 ```bash
-npx dt-tools validate tokens.json dark.tokens.json
+npx dtsg-tools validate tokens.json dark.tokens.json
 ```
 
 Use specific engines:
 
 ```bash
-npx dt-tools validate tokens.json --engine ajv
-npx dt-tools validate tokens.json --engine ajv --engine dispersa
+npx dtsg-tools validate tokens.json --engine ajv
+npx dtsg-tools validate tokens.json --engine ajv --engine dispersa
 ```
 
 Supported engine values:
@@ -56,13 +56,13 @@ all
 Convert to a CSS file:
 
 ```bash
-npx dt-tools convert tokens.json --output ./tokens/generated.css
+npx dtsg-tools convert tokens.json --output ./tokens/generated.css
 ```
 
 Print CSS to stdout:
 
 ```bash
-npx dt-tools convert tokens.json --stdout
+npx dtsg-tools convert tokens.json --stdout
 ```
 
 Default output:
@@ -83,13 +83,13 @@ dispersa
 Validate from stdin:
 
 ```bash
-cat tokens.json | npx dt-tools validate --stdin tokens.json --engine ajv
+cat tokens.json | npx dtsg-tools validate --stdin tokens.json --engine ajv
 ```
 
 Convert from stdin:
 
 ```bash
-cat tokens.json | npx dt-tools convert --stdin tokens.json --stdout
+cat tokens.json | npx dtsg-tools convert --stdin tokens.json --stdout
 ```
 
 In stdin mode, `tokens.json` is a virtual file name used for diagnostics and temporary files.

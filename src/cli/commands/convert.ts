@@ -245,7 +245,7 @@ export async function runConvertCommand(
         });
         const converters = [dispersaCssConverter];
 
-        tempDirectoryPath = await createTempDirectory("dt-tools-");
+            tempDirectoryPath = await createTempDirectory("dtsg-tools-");
         const validationSources = await createValidationSources(sourceInputs, tempDirectoryPath);
         const runResult = await convertSources(converters, validationSources);
 

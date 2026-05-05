@@ -429,7 +429,7 @@ async function runConvertCommand(positionalFiles, options) {
       stdinName: options.stdinName
     });
     const converters = [dispersaCssConverter];
-    tempDirectoryPath = await createTempDirectory("dt-tools-");
+    tempDirectoryPath = await createTempDirectory("dtsg-tools-");
     const validationSources = await createValidationSources(sourceInputs, tempDirectoryPath);
     const runResult = await convertSources(converters, validationSources);
     if (!runResult.success) {
@@ -830,7 +830,7 @@ async function runValidateCommand(positionalFiles, options) {
       stdinName: options.stdinName
     });
     const engines = resolveEngines(options.engines);
-    tempDirectoryPath = await createTempDirectory("dt-tools-");
+    tempDirectoryPath = await createTempDirectory("dtsg-tools-");
     const validationSources = await createValidationSources(sourceInputs, tempDirectoryPath);
     const runResult = await validateSources(engines, validationSources);
     for (const engineResult of runResult.results) {
@@ -894,7 +894,25 @@ function normalizeConvertArguments(positionalInputs, useStdin, stdinName, outFil
 }
 async function run() {
   const program = new import_commander.Command();
-  program.name("dt-tools");
+  program.name("dtsg-tools");
+  program.description("Validate DTCG JSON design tokens and convert them to CSS.");
+  program.showHelpAfterError();
+  program.addHelpText(
+    "after",
+    `
+Examples:
+  $ dtsg-tools validate tokens.json
+  $ dtsg-tools validate tokens.json --engine ajv --engine dispersa
+  $ dtsg-tools convert tokens.json --output ./tokens/generated.css
+  $ cat tokens.json | dtsg-tools validate --stdin tokens.json --engine ajv
+
+Available validation engines:
+  ajv
+  terrazzo
+  dispersa
+  all
+`
+  );
   program.command("validate").description("Validate DTCG tokens using configured engines").argument("[files...]", "Positional JSON files").option("--stdin [name]", "Read JSON from stdin with optional virtual file name").option(
     "--engine <name>",
     "Validation engine: ajv|terrazzo|dispersa|all (repeatable)",

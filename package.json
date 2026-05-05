@@ -1,19 +1,19 @@
 {
-  "name": "dt-tools",
+  "name": "dtsg-tools",
   "version": "0.1.2",
   "description": "CLI for validating DTCG JSON design tokens and converting them to CSS.",
   "license": "MIT",
-  "homepage": "https://github.com/dbychinsky/dt-tools",
+  "homepage": "https://github.com/dbychinsky/dtsg-tools",
   "bugs": {
-    "url": "https://github.com/dbychinsky/dt-tools"
+    "url": "https://github.com/dbychinsky/dtsg-tools"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dbychinsky/dt-tools.git"
+    "url": "git+https://github.com/dbychinsky/dtsg-tools.git"
   },
   "type": "module",
   "bin": {
-    "dt-tools": "dist-cli/index.cjs"
+    "dtsg-tools": "dist-cli/index.cjs"
   },
   "files": [
     "dist-cli",

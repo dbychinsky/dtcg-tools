@@ -118,7 +118,25 @@ function normalizeConvertArguments(
  */
 async function run(): Promise<void> {
     const program = new Command();
-    program.name("dt-tools");
+    program.name("dtsg-tools");
+    program.description("Validate DTCG JSON design tokens and convert them to CSS.");
+    program.showHelpAfterError();
+    program.addHelpText(
+        "after",
+        `
+Examples:
+  $ dtsg-tools validate tokens.json
+  $ dtsg-tools validate tokens.json --engine ajv --engine dispersa
+  $ dtsg-tools convert tokens.json --output ./tokens/generated.css
+  $ cat tokens.json | dtsg-tools validate --stdin tokens.json --engine ajv
+
+Available validation engines:
+  ajv
+  terrazzo
+  dispersa
+  all
+`,
+    );
 
     program
         .command("validate")

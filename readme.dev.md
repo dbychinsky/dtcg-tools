@@ -1,4 +1,4 @@
-# dt-tools Development
+# dtsg-tools Development
 
 ## Requirements
 
@@ -36,3 +36,4 @@ utils/
 
 npm version patch
 npm publish --access public
+
