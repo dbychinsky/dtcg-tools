@@ -3,13 +3,13 @@
   "version": "0.1.2",
   "description": "CLI for validating DTCG JSON design tokens and converting them to CSS.",
   "license": "MIT",
-  "homepage": "https://example.com/dt-tools",
+  "homepage": "https://github.com/dbychinsky/dt-tools",
   "bugs": {
-    "url": "https://example.com/dt-tools/issues"
+    "url": "https://github.com/dbychinsky/dt-tools"
   },
   "repository": {
     "type": "git",
-    "url": "https://example.com/dt-tools.git"
+    "url": "https://github.com/dbychinsky/dt-tools"
   },
   "type": "module",
   "bin": {
