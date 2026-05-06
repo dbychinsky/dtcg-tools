@@ -1,5 +1,4 @@
 import { mkdtemp, rm } from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 
 /**
@@ -8,7 +7,8 @@ import path from "node:path";
  * @returns Путь к созданной временной директории
  */
 export async function createTempDirectory(prefix: string): Promise<string> {
-    return mkdtemp(path.join(os.tmpdir(), prefix));
+    const localPrefix = path.join(process.cwd(), `.tmp-${prefix}`);
+    return mkdtemp(localPrefix);
 }
 
 /**
@@ -18,3 +18,4 @@ export async function createTempDirectory(prefix: string): Promise<string> {
 export async function removeDirectory(directoryPath: string): Promise<void> {
     await rm(directoryPath, { recursive: true, force: true });
 }
+

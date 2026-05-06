@@ -26,11 +26,26 @@ interface JsonSchema {
  * @returns Экземпляр AJV или null если директория схем не найдена
  */
 async function loadAjvValidator(): Promise<Ajv | null> {
-    const schemaDirectoryPath = process.env.DT_TOOLS_DTCG_SCHEMA_DIR
-        ? path.resolve(process.env.DT_TOOLS_DTCG_SCHEMA_DIR)
-        : path.resolve(process.cwd(), SCHEMA_DIRECTORY_FROM_REPO);
+    const executionEntryPath = process.argv[1] ? path.resolve(process.argv[1]) : null;
+    const executionDirectory = executionEntryPath ? path.dirname(executionEntryPath) : null;
+    const schemaDirectoryCandidates = process.env.DT_TOOLS_DTCG_SCHEMA_DIR
+        ? [path.resolve(process.env.DT_TOOLS_DTCG_SCHEMA_DIR)]
+        : [
+              path.resolve(process.cwd(), SCHEMA_DIRECTORY_FROM_REPO),
+              ...(executionDirectory
+                  ? [path.resolve(executionDirectory, "../src/dtcg/schema/2025.10")]
+                  : []),
+          ];
 
-    if (!(await isDirectory(schemaDirectoryPath))) {
+    let schemaDirectoryPath: string | null = null;
+    for (const candidatePath of schemaDirectoryCandidates) {
+        if (await isDirectory(candidatePath)) {
+            schemaDirectoryPath = candidatePath;
+            break;
+        }
+    }
+
+    if (!schemaDirectoryPath) {
         return null;
     }
 
@@ -129,3 +144,4 @@ export const ajvEngine: ValidationEngine = {
         };
     },
 };
+

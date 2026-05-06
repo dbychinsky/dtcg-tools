@@ -32,3 +32,4 @@
   "required": ["value", "unit"],
   "additionalProperties": false
 }
+

@@ -44,3 +44,4 @@ export interface CssConverter {
      */
     convert(sources: ValidationSource[]): Promise<CssConversionResult>;
 }
+

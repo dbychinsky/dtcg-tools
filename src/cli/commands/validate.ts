@@ -97,8 +97,7 @@ export async function runValidateCommand(
             stdinName: options.stdinName,
         });
         const engines = resolveEngines(options.engines);
-
-            tempDirectoryPath = await createTempDirectory("dtsg-tools-");
+        tempDirectoryPath = await createTempDirectory("dtcg-tools-");
         const validationSources = await createValidationSources(sourceInputs, tempDirectoryPath);
         const runResult = await validateSources(engines, validationSources);
 
@@ -116,3 +115,4 @@ export async function runValidateCommand(
         }
     }
 }
+

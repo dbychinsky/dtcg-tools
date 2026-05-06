@@ -38,12 +38,15 @@ export async function createValidationSources(
         const fileBaseName = path.basename(sourceInput.name);
         const safeFileName = toSafeFileName(fileBaseName);
         const tempFilePath = path.join(tempDirectoryPath, `${index}-${safeFileName}`);
+        const relativeTempFilePath = path.relative(process.cwd(), tempFilePath);
 
         await writeTextFile(tempFilePath, sourceInput.content!);
         validationSources.push({
             name: sourceInput.name,
             originalType: "content",
-            tempPath: tempFilePath,
+            tempPath: relativeTempFilePath.startsWith(".")
+                ? relativeTempFilePath
+                : `.${path.sep}${relativeTempFilePath}`,
         });
 
         index += 1;
@@ -51,3 +54,4 @@ export async function createValidationSources(
 
     return validationSources;
 }
+

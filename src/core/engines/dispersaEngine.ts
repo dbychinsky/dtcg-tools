@@ -94,6 +94,11 @@ async function collectValidationMessages(resolver: ResolverSourceDocument): Prom
  * @returns Относительная ссылка для резолвера
  */
 function toResolverSourceReference(filePath: string): string {
+    if (path.isAbsolute(filePath)) {
+        const normalizedAbsolutePath = filePath.split(path.sep).join("/");
+        return normalizedAbsolutePath;
+    }
+
     const relativePath = path.relative(process.cwd(), filePath);
     const normalized = relativePath.split(path.sep).join("/");
     if (normalized.startsWith("../") || normalized.startsWith("./")) {
@@ -157,3 +162,4 @@ export const dispersaEngine: ValidationEngine = {
         };
     },
 };
+

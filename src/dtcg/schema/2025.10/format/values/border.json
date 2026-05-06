@@ -42,3 +42,4 @@
   "required": ["color", "width", "style"],
   "additionalProperties": false
 }
+

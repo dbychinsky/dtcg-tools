@@ -1,6 +1,6 @@
-# Design token tools (dtsg-tools)
+# Design token tools (dtcg-tools)
 
-CLI for validating DTCG JSON design tokens and converting them to CSS.
+CLI for validating DTCG 2025.10 JSON design tokens and converting them to CSS.
 
 ## Requirements
 
@@ -11,35 +11,36 @@ Node.js >=18
 Run without install:
 
 ```bash
-npx dtsg-tools validate tokens.json --engine ajv
+npx dtcg-tools validate tokens.json
 ```
 
 Or install globally:
 
 ```bash
-npm install -g dtsg-tools
-dtsg-tools validate tokens.json --engine ajv
+npm install -g dtcg-tools
+dtcg-tools validate tokens.json
 ```
 
 ## Validate
 
-Validate one file (default engine):
+Validate one file (default engine: `dispersa`):
 
 ```bash
-npx dtsg-tools validate tokens.json
+npx dtcg-tools validate tokens.json
 ```
 
 Validate multiple files:
 
 ```bash
-npx dtsg-tools validate tokens.json dark.tokens.json
+npx dtcg-tools validate tokens.json dark.tokens.json
 ```
 
 Use specific engines:
 
 ```bash
-npx dtsg-tools validate tokens.json --engine ajv
-npx dtsg-tools validate tokens.json --engine ajv --engine dispersa
+npx dtcg-tools validate tokens.json --engine ajv
+npx dtcg-tools validate tokens.json --engine ajv --engine dispersa
+npx dtcg-tools validate tokens.json --engine all
 ```
 
 Supported engine values:
@@ -53,23 +54,18 @@ all
 
 ## Convert to CSS
 
-Convert to a CSS file:
-
-```bash
-npx dtsg-tools convert tokens.json --output ./tokens/generated.css
-```
+`convert` validates input before conversion. If validation fails, CSS is not generated.
 
 Print CSS to stdout:
 
 ```bash
-npx dtsg-tools convert tokens.json --stdout
+npx dtcg-tools convert tokens.json
 ```
 
-Default output:
+Write CSS to a file:
 
-```text
-single input   -> src/css/<input-name>.css
-multiple input -> src/css/tokens.css
+```bash
+npx dtcg-tools convert tokens.json --output ./tokens/generated.css
 ```
 
 CSS conversion currently uses:
@@ -83,16 +79,14 @@ dispersa
 Validate from stdin:
 
 ```bash
-cat tokens.json | npx dtsg-tools validate --stdin tokens.json --engine ajv
+cat tokens.json | npx dtcg-tools validate
 ```
 
 Convert from stdin:
 
 ```bash
-cat tokens.json | npx dtsg-tools convert --stdin tokens.json --stdout
+cat tokens.json | npx dtcg-tools convert
 ```
-
-In stdin mode, `tokens.json` is a virtual file name used for diagnostics and temporary files.
 
 ## License
 

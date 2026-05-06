@@ -5,3 +5,4 @@ module.exports = {
     outputs: [],
     lint: recommendedConfig,
 };
+

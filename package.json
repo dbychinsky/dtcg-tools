@@ -1,22 +1,31 @@
 {
-  "name": "dtsg-tools",
-  "version": "0.1.2",
+  "name": "dtcg-tools",
+  "version": "0.5.0",
   "description": "CLI for validating DTCG JSON design tokens and converting them to CSS.",
+  "keywords": [
+    "design-tokens",
+    "dtcg",
+    "tokens",
+    "cli",
+    "validation",
+    "css"
+  ],
   "license": "MIT",
-  "homepage": "https://github.com/dbychinsky/dtsg-tools",
+  "homepage": "https://github.com/dbychinsky/dtcg-tools",
   "bugs": {
-    "url": "https://github.com/dbychinsky/dtsg-tools"
+    "url": "https://github.com/dbychinsky/dtcg-tools"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dbychinsky/dtsg-tools.git"
+    "url": "git+https://github.com/dbychinsky/dtcg-tools.git"
   },
   "type": "module",
   "bin": {
-    "dtsg-tools": "dist-cli/index.cjs"
+    "dtcg-tools": "dist-cli/index.cjs"
   },
   "files": [
     "dist-cli",
+    "src/dtcg/schema/2025.10",
     "readme.md"
   ],
   "engines": {
@@ -37,15 +46,15 @@
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
     "commander": "14.0.1",
-    "dispersa": "1.4.0",
-    "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "dispersa": "1.4.0"
   },
   "devDependencies": {
     "@types/node": "24.10.1",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@vitejs/plugin-react": "^6.0.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "tsup": "8.5.1",
     "tsx": "4.20.6",
     "typescript": "5.9.3",

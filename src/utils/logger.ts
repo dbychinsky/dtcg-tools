@@ -13,3 +13,4 @@ export function logInfo(message: string): void {
 export function logError(message: string): void {
     console.error(message);
 }
+

@@ -26,9 +26,9 @@ const NO_INPUT_MESSAGE = [
     "No input provided.",
     "Use files or stdin:",
     "",
-    "npm run cli -- validate tokens.json",
-    "npm run cli -- validate tokens.json dark.tokens.json",
-    "cat tokens.json | npm run cli -- validate --stdin tokens.json",
+    "dtcg-tools validate tokens.json",
+    "dtcg-tools validate tokens.json dark.tokens.json",
+    "cat tokens.json | dtcg-tools validate",
 ].join("\n");
 
 /**
@@ -110,3 +110,4 @@ export async function collectSources(options: CollectSourcesOptions): Promise<So
 
     return sources;
 }
+

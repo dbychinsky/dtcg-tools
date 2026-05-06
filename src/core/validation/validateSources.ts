@@ -17,3 +17,4 @@ export async function validateSources(
         success: results.every((result) => result.success),
     };
 }
+

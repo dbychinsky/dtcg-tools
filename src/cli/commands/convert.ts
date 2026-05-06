@@ -1,9 +1,12 @@
 import path from "node:path";
 import { convertSources } from "src/core/conversion/convertSources";
 import { dispersaCssConverter } from "src/core/conversion/dispersaCssConverter";
+import { resolveEngines } from "src/core/engines";
 import { collectSources } from "src/core/input/collectSources";
 import { createValidationSources } from "src/core/input/createTempFiles";
 import { CliInputError, SourceInput } from "src/core/input/types";
+import { validateSources } from "src/core/validation/validateSources";
+import { Diagnostic, EngineValidationResult } from "src/core/validation/types";
 import { logError, logInfo } from "src/utils/logger";
 import { createTempDirectory, removeDirectory } from "src/utils/tempDirectory";
 import { writeTextFile } from "src/utils/fileSystem";
@@ -13,24 +16,9 @@ import { writeTextFile } from "src/utils/fileSystem";
  */
 export interface ConvertCommandOptions {
     /** 
-     * Флаг чтения из stdin 
-     */
-    useStdin: boolean;
-
-    /** 
-     * Имя виртуального файла для stdin 
-     */
-    stdinName?: string;
-
-    /** 
      * Путь к выходному файлу 
      */
     outFile?: string;
-
-    /** 
-     * Флаг вывода в stdout 
-     */
-    useStdout?: boolean;
 }
 
 /**
@@ -225,6 +213,31 @@ function resolveOutputPath(sourceInputs: SourceInput[], outFile?: string): strin
     return path.resolve("src", "css", fileName);
 }
 
+function formatDiagnosticsBySource(diagnostics: Diagnostic[]): Map<string, Diagnostic[]> {
+    const diagnosticsBySource = new Map<string, Diagnostic[]>();
+    for (const diagnostic of diagnostics) {
+        const sourceDiagnostics = diagnosticsBySource.get(diagnostic.sourceName) ?? [];
+        sourceDiagnostics.push(diagnostic);
+        diagnosticsBySource.set(diagnostic.sourceName, sourceDiagnostics);
+    }
+    return diagnosticsBySource;
+}
+
+function printEngineResult(result: EngineValidationResult, sourceNames: string[]): void {
+    const diagnosticsBySource = formatDiagnosticsBySource(result.diagnostics);
+    for (const sourceName of sourceNames) {
+        const sourceDiagnostics = diagnosticsBySource.get(sourceName) ?? [];
+        if (sourceDiagnostics.length === 0) {
+            continue;
+        }
+
+        logInfo(`✗ ${result.engineName}: ${sourceName}`);
+        for (const diagnostic of sourceDiagnostics) {
+            logInfo(`  - ${diagnostic.message}`);
+        }
+    }
+}
+
 /**
  * Запускает команду конвертации
  * @param positionalFiles - Массив файлов для конвертации
@@ -240,13 +253,21 @@ export async function runConvertCommand(
     try {
         const sourceInputs = await collectSources({
             positionalFiles,
-            useStdin: options.useStdin,
-            stdinName: options.stdinName,
+            useStdin: false,
+            stdinName: undefined,
         });
         const converters = [dispersaCssConverter];
-
-            tempDirectoryPath = await createTempDirectory("dtsg-tools-");
+        tempDirectoryPath = await createTempDirectory("dtcg-tools-");
         const validationSources = await createValidationSources(sourceInputs, tempDirectoryPath);
+        const validationRunResult = await validateSources(resolveEngines([]), validationSources);
+        if (!validationRunResult.success) {
+            const sourceNames = validationSources.map((source) => source.name);
+            for (const engineResult of validationRunResult.results) {
+                printEngineResult(engineResult, sourceNames);
+            }
+            return 1;
+        }
+
         const runResult = await convertSources(converters, validationSources);
 
         if (!runResult.success) {
@@ -259,7 +280,7 @@ export async function runConvertCommand(
         }
 
         const css = formatCombinedCss(runResult.results);
-        if (options.useStdout) {
+        if (!options.outFile) {
             process.stdout.write(css.endsWith("\n") ? css : `${css}\n`);
         } else {
             const outputPath = resolveOutputPath(sourceInputs, options.outFile);
@@ -277,3 +298,4 @@ export async function runConvertCommand(
         }
     }
 }
+

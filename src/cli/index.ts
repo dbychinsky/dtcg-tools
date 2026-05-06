@@ -1,4 +1,6 @@
 import { Command, CommanderError } from "commander";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { runConvertCommand } from "src/cli/commands/convert";
 import { runValidateCommand } from "src/cli/commands/validate";
 import { logError } from "src/utils/logger";
@@ -10,8 +12,9 @@ import { logError } from "src/utils/logger";
  * @returns Обновлённый массив
  */
 function appendValue(value: string, previous: string[]): string[] {
-    previous.push(value);
-    return previous;
+    const values = previous ?? [];
+    values.push(value);
+    return values;
 }
 
 /**
@@ -35,10 +38,99 @@ interface NormalizedValidateArguments {
 }
 
 interface NormalizedConvertArguments {
-    useStdin: boolean;
-    stdinName?: string;
     outFile?: string;
-    useStdout: boolean;
+}
+
+function resolveActionArguments(
+    args: unknown[],
+): { positionalInputs: string[]; options: Record<string, unknown> } {
+    const command = args.at(-1);
+    if (!(command instanceof Command)) {
+        return { positionalInputs: [], options: {} };
+    }
+
+    const positionalInputs = Array.isArray(args[0])
+        ? args[0].filter((value): value is string => typeof value === "string")
+        : [];
+
+    return {
+        positionalInputs,
+        options: command.opts<Record<string, unknown>>(),
+    };
+}
+
+function buildRootHelpText(): string {
+    const rows: string[] = [];
+    const addRow = (left: string, right: string) => {
+        rows.push(`${left.padEnd(42)}${right}`);
+    };
+
+    rows.push("Usage: dtcg-tools [options] [command]");
+    rows.push("");
+    rows.push("Validate DTCG JSON design tokens and convert them to CSS.");
+    rows.push("");
+    rows.push("Options:");
+    addRow("  -h, --help", "display help for command");
+    addRow("  -v, --version", "display version");
+    rows.push("");
+    rows.push("Commands:");
+    addRow(
+        "  validate [options] [files...]",
+        "Validate DTCG tokens using configured engines and print errors to stdout.",
+    );
+    addRow("", "Accepts JSON via stdin when files are not provided.");
+    addRow(
+        "    --engine <engine>",
+        "validation engine (ajv | terrazzo | dispersa | all). Default: dispersa.",
+    );
+    addRow("", "May be specified multiple times.");
+    addRow("", "Reads from stdin automatically if no files are provided.");
+    rows.push("");
+    addRow("  convert [options] [files...]", "Convert valid DTCG JSON tokens to CSS");
+    addRow("    --output <file>", "write CSS to the file (optional).");
+    addRow("", "Print CSS to stdout if not specified.");
+    addRow("", "Reads from stdin automatically and validates before conversion.");
+    rows.push("");
+    rows.push("");
+    rows.push("Examples:");
+    addRow("  Validate using default engine", "");
+    addRow("    dtcg-tools validate tokens.json", "");
+    rows.push("");
+    addRow("  Accept tokens from stdin and validate using specific engines", "");
+    addRow("    cat tokens.json | dtcg-tools validate --engine ajv --engine dispersa", "");
+    rows.push("");
+    addRow("  Convert tokens to CSS", "");
+    addRow("    dtcg-tools convert tokens.json --output tokens.css", "");
+    rows.push("");
+    rows.push("Available validation engines:");
+    rows.push("  ajv");
+    rows.push("  terrazzo");
+    rows.push("  dispersa");
+    rows.push("  all");
+    return rows.join("\n");
+}
+
+function resolveCliVersion(): string {
+    if (process.env.npm_package_version) {
+        return process.env.npm_package_version;
+    }
+
+    try {
+        const entryPath = process.argv[1] ? path.resolve(process.argv[1]) : undefined;
+        if (entryPath) {
+            const packageJsonPath = path.resolve(path.dirname(entryPath), "..", "package.json");
+            const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
+                version?: string;
+            };
+            if (packageJson.version) {
+                return packageJson.version;
+            }
+        }
+    } catch {
+        // no-op
+    }
+
+    return "0.0.0";
 }
 
 /**
@@ -55,27 +147,10 @@ function normalizeValidateArguments(
     useStdin: boolean,
     stdinName?: string,
 ): { positionalFiles: string[]; normalizedOptions: NormalizedValidateArguments } {
-    const positionalFiles: string[] = [];
-    const engines = [...optionEngines];
-
-    for (const positionalInput of positionalInputs) {
-        if (
-            positionalInput === "ajv" ||
-            positionalInput === "terrazzo" ||
-            positionalInput === "dispersa" ||
-            positionalInput === "all"
-        ) {
-            engines.push(positionalInput);
-            continue;
-        }
-
-        positionalFiles.push(positionalInput);
-    }
-
     return {
-        positionalFiles,
+        positionalFiles: positionalInputs,
         normalizedOptions: {
-            engines,
+            engines: [...optionEngines],
             useStdin,
             stdinName,
         },
@@ -84,31 +159,12 @@ function normalizeValidateArguments(
 
 function normalizeConvertArguments(
     positionalInputs: string[],
-    useStdin: boolean,
-    stdinName?: string,
     outFile?: string,
-    useStdout?: boolean,
 ): { positionalFiles: string[]; normalizedOptions: NormalizedConvertArguments } {
-    const positionalFiles: string[] = [];
-    let normalizedOutFile = outFile;
-    const normalizedUseStdout = Boolean(useStdout);
-
-    for (const positionalInput of positionalInputs) {
-        if (!normalizedOutFile && positionalInput.toLowerCase().endsWith(".css")) {
-            normalizedOutFile = positionalInput;
-            continue;
-        }
-
-        positionalFiles.push(positionalInput);
-    }
-
     return {
-        positionalFiles,
+        positionalFiles: positionalInputs,
         normalizedOptions: {
-            useStdin,
-            stdinName,
-            outFile: normalizedOutFile,
-            useStdout: normalizedUseStdout,
+            outFile,
         },
     };
 }
@@ -117,44 +173,46 @@ function normalizeConvertArguments(
  * Запускает CLI-приложение
  */
 async function run(): Promise<void> {
+    const cliVersion = resolveCliVersion();
+    if (process.argv.includes("--version") || process.argv.includes("-v")) {
+        process.stdout.write(`${cliVersion}\n`);
+        return;
+    }
+    if (process.argv.length >= 3 && process.argv[2] === "help") {
+        process.stdout.write(`${buildRootHelpText()}\n`);
+        return;
+    }
+    if (
+        process.argv.length <= 2 ||
+        (process.argv.length === 3 && (process.argv[2] === "--help" || process.argv[2] === "-h"))
+    ) {
+        process.stdout.write(`${buildRootHelpText()}\n`);
+        return;
+    }
+
     const program = new Command();
-    program.name("dtsg-tools");
+    program.name("dtcg-tools");
     program.description("Validate DTCG JSON design tokens and convert them to CSS.");
     program.showHelpAfterError();
-    program.addHelpText(
-        "after",
-        `
-Examples:
-  $ dtsg-tools validate tokens.json
-  $ dtsg-tools validate tokens.json --engine ajv --engine dispersa
-  $ dtsg-tools convert tokens.json --output ./tokens/generated.css
-  $ cat tokens.json | dtsg-tools validate --stdin tokens.json --engine ajv
-
-Available validation engines:
-  ajv
-  terrazzo
-  dispersa
-  all
-`,
-    );
+    program.helpCommand(false);
 
     program
         .command("validate")
-        .description("Validate DTCG tokens using configured engines")
+        .description("Validate DTCG tokens using configured engines and print errors to stdout.")
+        .usage("[<file>...]")
         .argument("[files...]", "Positional JSON files")
-        .option("--stdin [name]", "Read JSON from stdin with optional virtual file name")
         .option(
             "--engine <name>",
-            "Validation engine: ajv|terrazzo|dispersa|all (repeatable)",
+            "Validation engine (ajv | terrazzo | dispersa | all). Default: dispersa. May be specified multiple times.",
             appendValue,
-            [],
         )
-        .action(async (positionalInputs: string[], options: Record<string, unknown>) => {
+        .action(async (...args: unknown[]) => {
+            const { positionalInputs, options } = resolveActionArguments(args);
             const normalized = normalizeValidateArguments(
                 positionalInputs,
                 (options.engine as string[] | undefined) ?? [],
-                Boolean(options.stdin),
-                typeof options.stdin === "string" ? options.stdin : undefined,
+                false,
+                undefined,
             );
             const exitCode = await runValidateCommand(normalized.positionalFiles, {
                 engines: normalized.normalizedOptions.engines,
@@ -168,27 +226,17 @@ Available validation engines:
         .command("convert")
         .description("Convert valid DTCG JSON tokens to CSS")
         .argument("[files...]", "Positional JSON files")
-        .option("--stdin [name]", "Read JSON from stdin with optional virtual file name")
-        .option("--stdout", "Print generated CSS to stdout")
-        .option("-o, --out <file>", "Write generated CSS to a file instead of stdout")
-        .option("--output <file>", "Write generated CSS to a file instead of stdout")
-        .action(async (positionalInputs: string[], options: Record<string, unknown>) => {
+        .option("--output <file>", "Write CSS to file. Print CSS to stdout if not specified.")
+        .action(async (...args: unknown[]) => {
+            const { positionalInputs, options } = resolveActionArguments(args);
             const normalized = normalizeConvertArguments(
                 positionalInputs,
-                Boolean(options.stdin),
-                typeof options.stdin === "string" ? options.stdin : undefined,
                 typeof options.output === "string"
                     ? options.output
-                    : typeof options.out === "string"
-                      ? options.out
-                      : undefined,
-                Boolean(options.stdout),
+                    : undefined,
             );
             const exitCode = await runConvertCommand(normalized.positionalFiles, {
-                useStdin: normalized.normalizedOptions.useStdin,
-                stdinName: normalized.normalizedOptions.stdinName,
                 outFile: normalized.normalizedOptions.outFile,
-                useStdout: normalized.normalizedOptions.useStdout,
             });
             process.exitCode = exitCode;
         });
@@ -217,3 +265,4 @@ run().catch((error) => {
     }
     process.exitCode = 2;
 });
+

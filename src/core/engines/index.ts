@@ -6,6 +6,7 @@ import { CliInputError } from "src/core/input/types";
 
 /** Все доступные движки валидации */
 const ALL_ENGINES: ValidationEngine[] = [ajvEngine, terrazzoEngine, dispersaEngine];
+const DEFAULT_ENGINES: ValidationEngine[] = [dispersaEngine];
 
 /**
  * Возвращает массив движков валидации по их именам
@@ -14,7 +15,11 @@ const ALL_ENGINES: ValidationEngine[] = [ajvEngine, terrazzoEngine, dispersaEngi
  * @throws CliInputError если указано неизвестное имя движка
  */
 export function resolveEngines(engineInputs: string[]): ValidationEngine[] {
-    if (engineInputs.length === 0 || engineInputs.includes("all")) {
+    if (engineInputs.length === 0) {
+        return DEFAULT_ENGINES;
+    }
+
+    if (engineInputs.includes("all")) {
         return ALL_ENGINES;
     }
 
@@ -31,3 +36,4 @@ export function resolveEngines(engineInputs: string[]): ValidationEngine[] {
 
     return [...selected.values()];
 }
+

@@ -7,8 +7,9 @@ import { ReactElement } from "react";
 export function App(): ReactElement {
     return (
         <main className="page">
-            <h1>dtsg-tools</h1>
+            <h1>dtcg-tools</h1>
         </main>
     );
 }
+
 

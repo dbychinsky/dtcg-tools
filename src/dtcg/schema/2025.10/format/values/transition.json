@@ -42,3 +42,4 @@
   "required": ["duration", "delay", "timingFunction"],
   "additionalProperties": false
 }
+
