@@ -1,6 +1,6 @@
 {
   "name": "dtcg-tools",
-  "version": "0.5.0",
+  "version": "1.1.0",
   "description": "CLI for validating DTCG JSON design tokens and converting them to CSS.",
   "keywords": [
     "design-tokens",
@@ -32,12 +32,12 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 127.0.0.1 --port 5555 --strictPort",
     "build": "npm run build:app && npm run build:cli",
     "build:app": "vite build",
     "build:cli": "tsup",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview",
+    "preview": "vite preview --host 127.0.0.1 --port 5555 --strictPort",
     "cli": "tsx src/cli/index.ts",
     "prepack": "npm run build:cli"
   },

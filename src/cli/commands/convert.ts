@@ -18,7 +18,7 @@ export interface ConvertCommandOptions {
     /** 
      * Путь к выходному файлу 
      */
-    outFile?: string;
+    outFile?: string | string[];
 }
 
 /**
@@ -213,6 +213,16 @@ function resolveOutputPath(sourceInputs: SourceInput[], outFile?: string): strin
     return path.resolve("src", "css", fileName);
 }
 
+function normalizeOutputFiles(outFile?: string | string[]): string[] {
+    if (!outFile) {
+        return [];
+    }
+    if (Array.isArray(outFile)) {
+        return outFile;
+    }
+    return [outFile];
+}
+
 function formatDiagnosticsBySource(diagnostics: Diagnostic[]): Map<string, Diagnostic[]> {
     const diagnosticsBySource = new Map<string, Diagnostic[]>();
     for (const diagnostic of diagnostics) {
@@ -268,6 +278,13 @@ export async function runConvertCommand(
             return 1;
         }
 
+        const outputFiles = normalizeOutputFiles(options.outFile);
+        if (outputFiles.length > 1 && outputFiles.length !== sourceInputs.length) {
+            throw new CliInputError(
+                `Expected ${sourceInputs.length} output files for ${sourceInputs.length} inputs, got ${outputFiles.length}.`,
+            );
+        }
+
         const runResult = await convertSources(converters, validationSources);
 
         if (!runResult.success) {
@@ -280,12 +297,31 @@ export async function runConvertCommand(
         }
 
         const css = formatCombinedCss(runResult.results);
-        if (!options.outFile) {
+        if (outputFiles.length === 0) {
             process.stdout.write(css.endsWith("\n") ? css : `${css}\n`);
-        } else {
-            const outputPath = resolveOutputPath(sourceInputs, options.outFile);
+        } else if (outputFiles.length === 1) {
+            const outputPath = resolveOutputPath(sourceInputs, outputFiles[0]);
             await writeTextFile(outputPath, css);
             logInfo(`Generated CSS: ${outputPath}`);
+        } else {
+            for (const [index, sourceInput] of sourceInputs.entries()) {
+                const singleSource = [sourceInput];
+                const singleSourceValidation = [validationSources[index]];
+                const singleRunResult = await convertSources(converters, singleSourceValidation);
+                if (!singleRunResult.success) {
+                    for (const result of singleRunResult.results) {
+                        for (const error of result.errors) {
+                            logError(`${result.engineName}: ${error}`);
+                        }
+                    }
+                    return 1;
+                }
+
+                const singleCss = formatCombinedCss(singleRunResult.results);
+                const outputPath = resolveOutputPath(singleSource, outputFiles[index]);
+                await writeTextFile(outputPath, singleCss);
+                logInfo(`Generated CSS: ${outputPath}`);
+            }
         }
 
         return 0;

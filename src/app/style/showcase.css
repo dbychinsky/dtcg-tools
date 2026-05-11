@@ -1,0 +1,5 @@
+/* Бандл стилей Showcase */
+@import "src/app/style/styles.css";
+@import "src/app/ShowcasePage/ShowcasePage.css";
+@import "src/app/ShowcasePage/Menu.css";
+@import "src/app/ShowcasePage/Tabs.css";

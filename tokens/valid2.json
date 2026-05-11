@@ -1,0 +1,338 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "primitive": {
+    "color": {
+      "neutral-0": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "alpha": 1,
+          "hex": "#ffffff"
+        }
+      },
+      "neutral-50": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.969, 0.965, 0.957],
+          "alpha": 1,
+          "hex": "#f7f6f4"
+        }
+      },
+      "neutral-200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.859, 0.843, 0.812],
+          "alpha": 1,
+          "hex": "#dbd7cf"
+        }
+      },
+      "neutral-500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.427, 0.427, 0.459],
+          "alpha": 1,
+          "hex": "#6d6d75"
+        }
+      },
+      "neutral-900": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.114, 0.118, 0.157],
+          "alpha": 1,
+          "hex": "#1d1e28"
+        }
+      },
+      "violet-400": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.482, 0.404, 0.937],
+          "alpha": 1,
+          "hex": "#7b67ef"
+        }
+      },
+      "violet-500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.392, 0.282, 0.91],
+          "alpha": 1,
+          "hex": "#6448e8"
+        }
+      },
+      "amber-500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.922, 0.624, 0.153],
+          "alpha": 1,
+          "hex": "#eb9f27"
+        }
+      },
+      "emerald-500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.063, 0.651, 0.463],
+          "alpha": 1,
+          "hex": "#10a676"
+        }
+      },
+      "rose-500": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.886, 0.271, 0.396],
+          "alpha": 1,
+          "hex": "#e24565"
+        }
+      }
+    },
+    "dimension": {
+      "space-1": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "space-2": {
+        "$type": "dimension",
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "space-3": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "space-4": {
+        "$type": "dimension",
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        }
+      },
+      "radius-sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      },
+      "radius-lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18,
+          "unit": "px"
+        }
+      },
+      "font-sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 13,
+          "unit": "px"
+        }
+      },
+      "font-md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 15,
+          "unit": "px"
+        }
+      },
+      "font-xl": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    },
+    "fontFamily": {
+      "base": {
+        "$type": "fontFamily",
+        "$value": ["Manrope", "Arial", "sans-serif"]
+      },
+      "heading": {
+        "$type": "fontFamily",
+        "$value": ["Space Grotesk", "Arial", "sans-serif"]
+      }
+    },
+    "number": {
+      "line-tight": {
+        "$type": "number",
+        "$value": 1.1
+      },
+      "line-default": {
+        "$type": "number",
+        "$value": 1.6
+      },
+      "z-toast": {
+        "$type": "number",
+        "$value": 1200
+      }
+    },
+    "shadow": {
+      "soft": {
+        "$type": "shadow",
+        "$value": {
+          "color": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.1,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 10,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 30,
+            "unit": "px"
+          },
+          "spread": {
+            "value": -6,
+            "unit": "px"
+          }
+        }
+      }
+    }
+  },
+  "semantic": {
+    "color": {
+      "canvas": {
+        "$value": "{primitive.color.neutral-50}"
+      },
+      "surface": {
+        "$value": "{primitive.color.neutral-0}"
+      },
+      "text-primary": {
+        "$value": "{primitive.color.neutral-900}"
+      },
+      "text-secondary": {
+        "$value": "{primitive.color.neutral-500}"
+      },
+      "outline": {
+        "$value": "{primitive.color.neutral-200}"
+      },
+      "brand": {
+        "$value": "{primitive.color.violet-500}"
+      },
+      "brand-hover": {
+        "$value": "{primitive.color.violet-400}"
+      },
+      "positive": {
+        "$value": "{primitive.color.emerald-500}"
+      },
+      "critical": {
+        "$value": "{primitive.color.rose-500}"
+      },
+      "notice": {
+        "$value": "{primitive.color.amber-500}"
+      }
+    },
+    "layout": {
+      "container-padding": {
+        "$value": "{primitive.dimension.space-4}"
+      },
+      "control-gap": {
+        "$value": "{primitive.dimension.space-2}"
+      }
+    },
+    "typography": {
+      "body": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": ["Manrope", "Arial", "sans-serif"],
+          "fontSize": {
+            "value": 15,
+            "unit": "px"
+          },
+          "fontWeight": 500,
+          "letterSpacing": {
+            "value": 0,
+            "unit": "px"
+          },
+          "lineHeight": 1.6
+        }
+      },
+      "hero": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": ["Space Grotesk", "Arial", "sans-serif"],
+          "fontSize": {
+            "value": 32,
+            "unit": "px"
+          },
+          "fontWeight": 700,
+          "letterSpacing": {
+            "value": -0.4,
+            "unit": "px"
+          },
+          "lineHeight": 1.1
+        }
+      }
+    }
+  },
+  "component": {
+    "toast": {
+      "success": {
+        "background": {
+          "$value": "{semantic.color.positive}"
+        },
+        "text": {
+          "$value": "{semantic.color.surface}"
+        },
+        "shadow": {
+          "$value": "{primitive.shadow.soft}"
+        }
+      }
+    },
+    "panel": {
+      "default": {
+        "background": {
+          "$value": "{semantic.color.surface}"
+        },
+        "border": {
+          "$value": "{semantic.color.outline}"
+        },
+        "radius": {
+          "$value": "{primitive.dimension.radius-lg}"
+        },
+        "padding": {
+          "$value": "{semantic.layout.container-padding}"
+        }
+      }
+    },
+    "cta": {
+      "primary": {
+        "background": {
+          "$value": "{semantic.color.brand}"
+        },
+        "background-hover": {
+          "$value": "{semantic.color.brand-hover}"
+        },
+        "text": {
+          "$value": "{semantic.color.surface}"
+        },
+        "radius": {
+          "$value": "{primitive.dimension.radius-sm}"
+        }
+      }
+    }
+  }
+}

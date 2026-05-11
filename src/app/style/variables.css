@@ -1,0 +1,67 @@
+:root {
+    color-scheme: light;
+    --font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Примитивная палитра */
+    --white-0: #ffffff;
+    --white-100: #eef1ff;
+
+    --gray-100: #e4e7ef;
+    --gray-200: #d9dce6;
+    --gray-500: #657084;
+    --gray-600: #4a5168;
+    --gray-700: #161a23;
+    --gray-800: #1f2a4c;
+    --gray-900: #0f172a;
+    --gray-950: #0e1733;
+
+    --blue-500: #2e4de6;
+
+    /* Семантические цветовые токены */
+    --color-text-primary: var(--gray-700);
+    --color-text-inverse: var(--white-100);
+
+    --color-background-page: var(--white-100);
+    --color-background-surface: var(--white-0);
+    --color-background-elevated: var(--gray-950);
+    --color-background-elevated-hover: var(--gray-800);
+
+    --color-border-default: var(--gray-200);
+    --color-border-subtle: var(--gray-100);
+
+    --color-icon-neutral: var(--gray-700);
+    --color-icon-strong: var(--gray-900);
+
+    --color-accent-primary: var(--blue-500);
+    --color-shadow-soft: rgba(101, 112, 132, 0.2);
+
+    --space-0: 0;
+    --space-1: 6px;
+    --space-2: 8px;
+    --space-4: 12px;
+    --space-5: 14px;
+    --space-6: 16px;
+    --space-7: 20px;
+    --space-8: 24px;
+    --space-9: 28px;
+
+    --radius-md: 6px;
+    --radius-lg: 8px;
+
+    --size-header-title: 28px;
+    --size-category-title: 28px;
+    --size-category-title-mobile: 24px;
+    --size-menu-item: 14px;
+    --size-token-name: 15px;
+    --size-token-value: 14px;
+    --size-footer: 13px;
+
+    --layout-width-max: 1600px;
+    --layout-menu-min: 210px;
+    --layout-menu-max: 260px;
+    --layout-card-min: 220px;
+    --layout-card-height-min: 230px;
+    --layout-preview-height: 110px;
+    --layout-grid-step: 10px;
+}

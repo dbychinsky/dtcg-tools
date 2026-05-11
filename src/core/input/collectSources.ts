@@ -27,7 +27,7 @@ const NO_INPUT_MESSAGE = [
     "Use files or stdin:",
     "",
     "dtcg-tools validate tokens.json",
-    "dtcg-tools validate tokens.json dark.tokens.json",
+    "dtcg-tools validate tokens.json input-dark.json",
     "cat tokens.json | dtcg-tools validate",
 ].join("\n");
 
