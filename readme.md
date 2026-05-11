@@ -21,6 +21,8 @@ quickly check how the generated tokens look visually.
 - Run validate -> convert -> showcase in one command.
 - Run directly with `npx`, without global installation.
 
+<img src="images/preview.jpg" alt="preview" width="400" />
+
 ## Requirements
 
 Node.js >=18
